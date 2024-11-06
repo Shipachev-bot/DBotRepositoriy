@@ -133,10 +133,10 @@ async def cmd_random(message: types.Message, state: FSMContext):
     await message.answer_photo(
         photo='AgACAgIAAxkBAAMRZx-OnS_uBxFsH0gdGfxwZxaOEg0AAnjmMRuxo-FIn71JGxWvdKgBAAMCAAN5AAM2BA',
         caption='<b>Справочник про делянам</b>', reply_markup=keybords.inline_infro_delyana(), parse_mode="html")
-    await message.answer_photo(
-        photo='AgACAgIAAxkBAAMTZx-OwCBgr3mzVKylo3_X_3gOTMYAAoHmMRuxo-FIDZdMbTMwJ78BAAMCAAN5AAM2BA',
-        caption='<b>Справочник по дорогам и складам</b>', reply_markup=keybords.inline_infro_roads_and_sklads(),
-        parse_mode='html')
+    #await message.answer_photo(
+      #  photo='AgACAgIAAxkBAAMTZx-OwCBgr3mzVKylo3_X_3gOTMYAAoHmMRuxo-FIDZdMbTMwJ78BAAMCAAN5AAM2BA',
+     #   caption='<b>Справочник по дорогам и складам</b>', reply_markup=keybords.inline_infro_roads_and_sklads(),
+       # parse_mode='html')
 
 
 @dp.message(F.text.lower() == "оцифровка планшетов")

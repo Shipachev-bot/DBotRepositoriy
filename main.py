@@ -42,6 +42,11 @@ async def answer_no(message: Message):
     # await message.answer('Ой, тут давай сам')
     await message.answer('Этот блок в процеcсе разработки, поторопите Илью и тут появятся подсказки')
 
+@dp.message(F.text.lower() == 'калькулятор')
+async def cmd_start(message: types.Message, state: FSMContext):
+    await message.answer("Привет, давай узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
+                         reply_markup=keybords.start_brif())
+
 
 @dp.message(F.text.lower() == "назад 🔙")
 async def answer_no(message: Message, state: FSMContext):
@@ -52,6 +57,9 @@ async def answer_no(message: Message, state: FSMContext):
     elif data == StateSelection.create_infro or data == StateSelection.ls_state:
         await message.answer('Выберите интересующий раздел', reply_markup=keybords.web_first_keybord())
         await state.set_state(StateSelection.sectionSelection)
+    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps:
+        await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
+        await state.set_state(StateSelection.moduleSelection)
     else:
         await message.answer("Что-то пошло не так")
 
@@ -236,7 +244,7 @@ async def another(message: Message):
     await message.answer('НУ другое так другое')
 
 
-@dp.message(StateSelection.moduleSelection)
+@dp.message(StateSelection.moduleSelection )
 async def no_module(message: Message):
     await message.answer('У нас нет такого модуля, пожалуйста нормально выбери да')
 
@@ -263,7 +271,7 @@ async def photo(message: Message):
     await message.answer(f'{photo_data}')
 
 
-@dp.message(F.text.lower() == 'калькулятор')
+@dp.message(F.text.lower() == 'калькулятор', StateSelection.moduleSelection)
 async def cmd_start(message: types.Message, state: FSMContext):
     await message.answer("Привет, давай узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
                          reply_markup=keybords.start_brif())

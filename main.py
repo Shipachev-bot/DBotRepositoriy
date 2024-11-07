@@ -271,10 +271,6 @@ async def photo(message: Message):
     await message.answer(f'{photo_data}')
 
 
-@dp.message(F.text.lower() == 'калькулятор', StateSelection.moduleSelection)
-async def cmd_start(message: types.Message, state: FSMContext):
-    await message.answer("Привет, давай узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
-                         reply_markup=keybords.start_brif())
 
 
 @dp.callback_query(F.data == "start_brif")

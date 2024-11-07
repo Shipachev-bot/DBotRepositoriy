@@ -42,10 +42,6 @@ async def answer_no(message: Message):
     # await message.answer('Ой, тут давай сам')
     await message.answer('Этот блок в процеcсе разработки, поторопите Илью и тут появятся подсказки')
 
-@dp.message(F.text.lower() == 'калькулятор')
-async def cmd_start(message: types.Message, state: FSMContext):
-    await message.answer("Привет, давай узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
-                         reply_markup=keybords.start_brif())
 
 
 @dp.message(F.text.lower() == "назад 🔙")
@@ -57,7 +53,7 @@ async def answer_no(message: Message, state: FSMContext):
     elif data == StateSelection.create_infro or data == StateSelection.ls_state:
         await message.answer('Выберите интересующий раздел', reply_markup=keybords.web_first_keybord())
         await state.set_state(StateSelection.sectionSelection)
-    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps:
+    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps or data == StateSelection.calcSelection:
         await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
         await state.set_state(StateSelection.moduleSelection)
     else:
@@ -260,9 +256,6 @@ async def no_section(message: Message, state: FSMContext):
     await message.answer(str(data))
 
 
-@dp.message(F.text)
-async def no_section(message: Message):
-    await message.answer('Выберите что-нибудь из кнопок')
 
 
 @dp.message(F.photo)
@@ -272,8 +265,15 @@ async def photo(message: Message):
 
 
 
+@dp.message(F.text.lower() == 'калькулятор')
+async def cmd_start(message: types.Message, state: FSMContext):
+    await message.answer("Давайте узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
+                         reply_markup=keybords.start_brif())
+    await state.set_state(StateSelection.calcSelection)
 
-@dp.callback_query(F.data == "start_brif")
+
+
+@dp.callback_query(F.data == "start_brif", StateSelection.calcSelection)
 async def first(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(text='Введите количество договоров аренды')
     await state.set_state(StateSelection.DA_state)
@@ -337,6 +337,11 @@ async def ending(callback: types.CallbackQuery):
         await callback.message.answer(
             '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии:</b>10000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
                 counting(dogovor, sotrudniki, karty)), parse_mode='html')
+
+
+@dp.message(F.text)
+async def no_section(message: Message):
+    await message.answer('Выберите что-нибудь из кнопок')
 
 
 async def main():

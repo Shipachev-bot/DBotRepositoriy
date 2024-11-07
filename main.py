@@ -55,6 +55,7 @@ async def answer_no(message: Message, state: FSMContext):
     else:
         await message.answer("Что-то пошло не так")
 
+
 @dp.message(F.text.lower() == "личный кабинет")
 async def LS(message: Message, state: FSMContext):
     await message.answer_photo(
@@ -63,6 +64,7 @@ async def LS(message: Message, state: FSMContext):
         parse_mode="html",
         reply_markup=keybords.LS_keybord())
     await state.set_state(StateSelection.ls_state)
+
 
 @dp.message(F.text.lower() == "карты/спутники")
 async def answer_no(message: Message):
@@ -141,10 +143,10 @@ async def cmd_random(message: types.Message, state: FSMContext):
     await message.answer_photo(
         photo='AgACAgIAAxkBAAMRZx-OnS_uBxFsH0gdGfxwZxaOEg0AAnjmMRuxo-FIn71JGxWvdKgBAAMCAAN5AAM2BA',
         caption='<b>Справочник про делянам</b>', reply_markup=keybords.inline_infro_delyana(), parse_mode="html")
-    #await message.answer_photo(
-      #  photo='AgACAgIAAxkBAAMTZx-OwCBgr3mzVKylo3_X_3gOTMYAAoHmMRuxo-FIDZdMbTMwJ78BAAMCAAN5AAM2BA',
-     #   caption='<b>Справочник по дорогам и складам</b>', reply_markup=keybords.inline_infro_roads_and_sklads(),
-       # parse_mode='html')
+    # await message.answer_photo(
+    #  photo='AgACAgIAAxkBAAMTZx-OwCBgr3mzVKylo3_X_3gOTMYAAoHmMRuxo-FIDZdMbTMwJ78BAAMCAAN5AAM2BA',
+    #   caption='<b>Справочник по дорогам и складам</b>', reply_markup=keybords.inline_infro_roads_and_sklads(),
+    # parse_mode='html')
 
 
 @dp.message(F.text.lower() == "оцифровка планшетов")
@@ -193,8 +195,6 @@ async def planshet(message: Message):
         parse_mode="html")
 
 
-
-
 @dp.message(F.text.lower() == "фотозамер штабеля")
 async def planshet(message: Message):
     await message.answer_photo(
@@ -218,7 +218,6 @@ async def planshet(message: Message):
         parse_mode="html")
 
 
-
 @dp.callback_query(F.data == "create_infro", StateSelection.sectionSelection)
 async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(text='Отлично! Воспользуйтесь кнопками на клавиатуре',
@@ -227,7 +226,7 @@ async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query(F.data == "roads_and_sklads")
-async def send_random_value(callback: types.CallbackQuery, state: StatesGroup):
+async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(text='Этот раздел еще формируется')
     await state.set_state(StateSelection.create_infro)
 
@@ -262,6 +261,78 @@ async def no_section(message: Message):
 async def photo(message: Message):
     photo_data = message.photo[-1]
     await message.answer(f'{photo_data}')
+
+
+@dp.message(F.text.lower() == 'калькулятор')
+async def cmd_start(message: types.Message, state: FSMContext):
+    await message.answer("Привет, давай узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
+                         reply_markup=keybords.start_brif())
+
+
+@dp.callback_query(F.data == "start_brif")
+async def first(callback: types.CallbackQuery, state: FSMContext):
+    await callback.message.answer(text='Введите количество договоров аренды')
+    await state.set_state(StateSelection.DA_state)
+
+
+counter = []
+
+
+@dp.message(StateSelection.DA_state)
+async def second(message: Message, state: FSMContext):
+    da = int(message.text)
+    counter.append(da)
+    await state.update_data(DA_state=da)
+    await message.answer(text='Введите количество сотрудников')
+    await state.set_state(StateSelection.employes)
+
+
+@dp.message(StateSelection.employes)
+async def third(message: Message, state: FSMContext):
+    employes = int(message.text)
+    await state.update_data(employes=int(employes))
+    await state.set_state(StateSelection.DA_state)
+    counter.append(employes)
+    await message.answer(
+        text='Мы можем подгрузить растровые и векторные карты в ваш аккаунт, введите их количество, если такой необходимости нет введите 0')
+    await state.set_state(StateSelection.maps)
+
+
+@dp.message(StateSelection.maps)
+async def mapss(message: Message, state: FSMContext):
+    maps = int(message.text)
+    counter.append(maps)
+    await state.update_data(maps=maps)
+    await message.answer(text='Нажмите кнопку', reply_markup=keybords.start_count())
+    await state.set_state(StateSelection.count)
+
+
+def counting(dogovor, sotrudniki, karty):
+    # Внедрение
+    vnedrenie = dogovor * 15000 + sotrudniki * 5000 + karty * 30000
+
+    return vnedrenie
+
+
+@dp.callback_query(StateSelection.count and F.data == "start_count")
+async def ending(callback: types.CallbackQuery):
+    dogovor = counter[0]
+    sotrudniki = counter[1]
+    karty = counter[2]
+    if dogovor <= 3 and sotrudniki <= 10:
+        await callback.message.answer(
+            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии:</b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), parse_mode='html')
+
+    elif sotrudniki > 20:
+        await callback.message.answer(
+            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии:</b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), parse_mode='html')
+
+    else:
+        await callback.message.answer(
+            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии:</b>10000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), parse_mode='html')
 
 
 async def main():

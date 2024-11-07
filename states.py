@@ -8,3 +8,7 @@ class StateSelection(StatesGroup):
     sectionSelection = State()
     create_infro = State()
     ls_state = State()
+    DA_state = State()
+    count = State()
+    employes = State()
+    maps = State()

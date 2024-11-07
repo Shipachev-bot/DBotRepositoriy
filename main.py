@@ -49,12 +49,20 @@ async def answer_no(message: Message, state: FSMContext):
     if data == StateSelection.sectionSelection:
         await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
         await state.set_state(StateSelection.moduleSelection)
-    elif data == StateSelection.create_infro:
+    elif data == StateSelection.create_infro or data == StateSelection.ls_state:
         await message.answer('Выберите интересующий раздел', reply_markup=keybords.web_first_keybord())
         await state.set_state(StateSelection.sectionSelection)
     else:
         await message.answer("Что-то пошло не так")
 
+@dp.message(F.text.lower() == "личный кабинет")
+async def LS(message: Message, state: FSMContext):
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAIJoWcsXO_BYkDNbVuAHoseY00m6LegAAJL5DEbRXhgSUxTi-lS5v8LAQADAgADeQADNgQ',
+        caption="<b>Личный кабинет</b>\n\nЛичный кабинет — это рабочее место пользователя в Системе.Личный кабинет позволяет: \n\nВидеть основную информацию об аккаунте и подключённому тарифу; \n\nПроизводить установку и смену пароля; \n\nОтображать созданные рабочие области с возможностью их редактирования и удаления; \n\nОтображать список сотрудников с возможностью редактирования и добавления; \n\nПроизводить смену и оплату тарифа; \n\nВключать и отключать доступ к спутнику Sentinel \n\nОтправлять заявку на модули расширения функционала.\n\n<b>Пожалуйста выберите раздел на клавиатуре</b>",
+        parse_mode="html",
+        reply_markup=keybords.LS_keybord())
+    await state.set_state(StateSelection.ls_state)
 
 @dp.message(F.text.lower() == "карты/спутники")
 async def answer_no(message: Message):

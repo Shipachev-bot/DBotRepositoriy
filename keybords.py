@@ -51,6 +51,18 @@ def mobile_app_first_keybord() -> ReplyKeyboardMarkup:
     kb.adjust(3, 1, 2)
     return kb.as_markup(resize_keyboard=True)
 
+def LS_keybord() -> ReplyKeyboardMarkup:
+    kb = ReplyKeyboardBuilder()
+    kb.button(text="Добавление сотрудников и доступ")
+    kb.button(text="Оплата")
+    kb.button(text="Установка и смена пароля")
+    kb.button(text="Договор аренды и доступ")
+    kb.button(text="Назад 🔙")
+
+
+    kb.adjust(1, 3, 1)
+    return kb.as_markup(resize_keyboard=True)
+
 
 def treckRecording_keybord() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()

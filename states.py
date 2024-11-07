@@ -7,3 +7,4 @@ class StateSelection(StatesGroup):
     moduleSelection = State()
     sectionSelection = State()
     create_infro = State()
+    ls_state = State()

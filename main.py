@@ -240,9 +240,7 @@ async def another(message: Message):
     await message.answer('НУ другое так другое')
 
 
-@dp.message(StateSelection.moduleSelection )
-async def no_module(message: Message):
-    await message.answer('У нас нет такого модуля, пожалуйста нормально выбери да')
+
 
 
 @dp.message(F.text, StateSelection.sectionSelection)
@@ -342,6 +340,10 @@ async def ending(callback: types.CallbackQuery):
 @dp.message(F.text)
 async def no_section(message: Message):
     await message.answer('Выберите что-нибудь из кнопок')
+
+@dp.message(StateSelection.moduleSelection )
+async def no_module(message: Message):
+    await message.answer('У нас нет такого модуля, пожалуйста нормально выбери да')
 
 
 async def main():

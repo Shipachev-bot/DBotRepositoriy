@@ -317,12 +317,10 @@ async def ending(callback: types.CallbackQuery):
         await callback.message.answer(
             '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
                 counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
-
     elif sotrudniki > 20:
         await callback.message.answer(
             '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
                 counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
-
     else:
         await callback.message.answer(
             '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(

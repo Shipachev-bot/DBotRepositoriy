@@ -308,11 +308,12 @@ def counting(dogovor, sotrudniki, karty):
     return vnedrenie
 
 
-@dp.callback_query(StateSelection.count, F.data == "start_count")
+@dp.callback_query(StateSelection.count and F.data == "start_count")
 async def ending(callback: types.CallbackQuery):
     dogovor = counter[0]
     sotrudniki = counter[1]
     karty = counter[2]
+    counting(dogovor, sotrudniki, karty)
     if dogovor <= 3 and sotrudniki <= 10:
         await callback.message.answer(
             '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(

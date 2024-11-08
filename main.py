@@ -276,17 +276,10 @@ counter = []
 @dp.message(StateSelection.DA_state)
 async def second(message: Message, state: FSMContext):
     da = int(message.text)
-    check = isinstance(da, int)
-    if check == True:
-        counter.append(da)
-        await state.update_data(DA_state=da)
-        await message.answer(text='Введите количество сотрудников')
-        await state.set_state(StateSelection.employes)
-    else:
-        while check != True:
-            await message.answer(text='Это не число!')
-            await message.answer(text='Введите количество договоров аренды')
-            await state.set_state(StateSelection.DA_state)
+    counter.append(da)
+    await state.update_data(DA_state=da)
+    await message.answer(text='Введите количество сотрудников')
+    await state.set_state(StateSelection.employes)
 
 
 @dp.message(StateSelection.employes)
@@ -321,21 +314,17 @@ async def ending(callback: types.CallbackQuery):
     dogovor = counter[0]
     sotrudniki = counter[1]
     karty = counter[2]
-    vnedrsumm = counting(dogovor, sotrudniki, karty)
     if dogovor <= 3 and sotrudniki <= 10:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     elif sotrudniki > 20:
         await callback.message.answer(
-            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     else:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
     counter.clear()
 
 

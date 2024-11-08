@@ -321,21 +321,20 @@ async def ending(callback: types.CallbackQuery):
     dogovor = counter[0]
     sotrudniki = counter[1]
     karty = counter[2]
-    vnedrsumm = counting(dogovor, sotrudniki, karty)
     if dogovor <= 3 and sotrudniki <= 10:
         await callback.message.answer(
             '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     elif sotrudniki > 20:
         await callback.message.answer(
             '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     else:
         await callback.message.answer(
             '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                vnedrsumm), ' руб', parse_mode='html')
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
     counter.clear()
 
 

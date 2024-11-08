@@ -305,7 +305,6 @@ async def mapss(message: Message, state: FSMContext):
 def counting(dogovor, sotrudniki, karty):
     # Внедрение
     vnedrenie = dogovor * 15000 + sotrudniki * 5000 + karty * 30000
-
     return vnedrenie
 
 
@@ -316,15 +315,18 @@ async def ending(callback: types.CallbackQuery):
     karty = counter[2]
     if dogovor <= 3 and sotrudniki <= 10:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     elif sotrudniki > 20:
         await callback.message.answer(
-            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
 
     else:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
+            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
     counter.clear()
 
 

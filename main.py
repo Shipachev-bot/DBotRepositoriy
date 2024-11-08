@@ -276,17 +276,10 @@ counter = []
 @dp.message(StateSelection.DA_state)
 async def second(message: Message, state: FSMContext):
     da = int(message.text)
-    check = isinstance(da, int)
-    if check == True:
-        counter.append(da)
-        await state.update_data(DA_state=da)
-        await message.answer(text='Введите количество сотрудников')
-        await state.set_state(StateSelection.employes)
-    else:
-        while check != True:
-            await message.answer(text='Это не число!')
-            await message.answer(text='Введите количество договоров аренды')
-            await state.set_state(StateSelection.DA_state)
+    counter.append(da)
+    await state.update_data(DA_state=da)
+    await message.answer(text='Введите количество сотрудников')
+    await state.set_state(StateSelection.employes)
 
 
 @dp.message(StateSelection.employes)

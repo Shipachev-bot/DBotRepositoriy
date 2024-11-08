@@ -308,7 +308,7 @@ def counting(dogovor, sotrudniki, karty):
     return vnedrenie
 
 
-@dp.callback_query(StateSelection.count and F.data == "start_count")
+@dp.callback_query(StateSelection.count, F.data == "start_count")
 async def ending(callback: types.CallbackQuery):
     dogovor = counter[0]
     sotrudniki = counter[1]

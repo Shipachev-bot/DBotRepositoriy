@@ -31,6 +31,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await state.set_state(StateSelection.moduleSelection)
     counter.clear()
 
+
 @dp.message(F.text.lower() == "мобильное приложения📱")
 async def answer_no(message: Message):
     # await message.answer('Выберите интересующий раздел', reply_markup=keybords.mobile_app_first_keybord())
@@ -41,7 +42,6 @@ async def answer_no(message: Message):
 async def answer_no(message: Message):
     # await message.answer('Ой, тут давай сам')
     await message.answer('Этот блок в процеcсе разработки, поторопите Илью и тут появятся подсказки')
-
 
 
 @dp.message(F.text.lower() == "назад 🔙")
@@ -240,9 +240,6 @@ async def another(message: Message):
     await message.answer('НУ другое так другое')
 
 
-
-
-
 @dp.message(F.text, StateSelection.sectionSelection)
 async def no_section(message: Message):
     await message.answer('Кажется у нас нет такого раздела, выберите другой)')
@@ -254,13 +251,10 @@ async def no_section(message: Message, state: FSMContext):
     await message.answer(str(data))
 
 
-
-
 @dp.message(F.photo)
 async def photo(message: Message):
     photo_data = message.photo[-1]
     await message.answer(f'{photo_data}')
-
 
 
 @dp.message(F.text.lower() == 'калькулятор')
@@ -268,7 +262,6 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await message.answer("Давайте узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
                          reply_markup=keybords.start_brif())
     await state.set_state(StateSelection.calcSelection)
-
 
 
 @dp.callback_query(F.data == "start_brif", StateSelection.calcSelection)
@@ -283,10 +276,17 @@ counter = []
 @dp.message(StateSelection.DA_state)
 async def second(message: Message, state: FSMContext):
     da = int(message.text)
-    counter.append(da)
-    await state.update_data(DA_state=da)
-    await message.answer(text='Введите количество сотрудников')
-    await state.set_state(StateSelection.employes)
+    check = isinstance(da, int)
+    if check == True:
+        counter.append(da)
+        await state.update_data(DA_state=da)
+        await message.answer(text='Введите количество сотрудников')
+        await state.set_state(StateSelection.employes)
+    else:
+        while check != True:
+            await message.answer(text='Это не число!')
+            await message.answer(text='Введите количество договоров аренды')
+            await state.set_state(StateSelection.DA_state)
 
 
 @dp.message(StateSelection.employes)
@@ -321,29 +321,30 @@ async def ending(callback: types.CallbackQuery):
     dogovor = counter[0]
     sotrudniki = counter[1]
     karty = counter[2]
+    vnedrenie = counting(dogovor, sotrudniki, karty)
     if dogovor <= 3 and sotrudniki <= 10:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии:</b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), parse_mode='html')
+            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                vnedrenie), ' руб', parse_mode='html')
 
     elif sotrudniki > 20:
         await callback.message.answer(
-            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии:</b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), parse_mode='html')
+            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                vnedrenie), ' руб', parse_mode='html')
 
     else:
         await callback.message.answer(
-            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии:</b>10000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), parse_mode='html')
+            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
+                vnedrenie), ' руб', parse_mode='html')
     counter.clear()
-
 
 
 @dp.message(F.text)
 async def no_section(message: Message):
     await message.answer('Выберите что-нибудь из кнопок')
 
-@dp.message(StateSelection.moduleSelection )
+
+@dp.message(StateSelection.moduleSelection)
 async def no_module(message: Message):
     await message.answer('У нас нет такого модуля, пожалуйста нормально выбери да')
 

@@ -6,7 +6,6 @@ from aiogram.fsm.state import State, StatesGroup
 class StateSelection(StatesGroup):
     moduleSelection = State()
     sectionSelection = State()
-    calcSelection = State()
     create_infro = State()
     ls_state = State()
     DA_state = State()

@@ -53,7 +53,7 @@ async def answer_no(message: Message, state: FSMContext):
     elif data == StateSelection.create_infro or data == StateSelection.ls_state:
         await message.answer('Выберите интересующий раздел', reply_markup=keybords.web_first_keybord())
         await state.set_state(StateSelection.sectionSelection)
-    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps or data == StateSelection.calcSelection:
+    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps:
         await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
         await state.set_state(StateSelection.moduleSelection)
     else:
@@ -255,79 +255,6 @@ async def no_section(message: Message, state: FSMContext):
 async def photo(message: Message):
     photo_data = message.photo[-1]
     await message.answer(f'{photo_data}')
-
-
-@dp.message(F.text.lower() == 'калькулятор')
-async def cmd_start(message: types.Message, state: FSMContext):
-    await message.answer("Давайте узнаем стоимость подходящего для тебя тарифа и стоимость внедрения!",
-                         reply_markup=keybords.start_brif())
-    await state.set_state(StateSelection.calcSelection)
-
-
-@dp.callback_query(F.data == "start_brif", StateSelection.calcSelection)
-async def first(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer(text='Введите количество договоров аренды')
-    await state.set_state(StateSelection.DA_state)
-
-
-counter = []
-
-
-@dp.message(StateSelection.DA_state)
-async def second(message: Message, state: FSMContext):
-    da = int(message.text)
-    counter.append(da)
-    await state.update_data(DA_state=da)
-    await message.answer(text='Введите количество сотрудников')
-    await state.set_state(StateSelection.employes)
-
-
-@dp.message(StateSelection.employes)
-async def third(message: Message, state: FSMContext):
-    employes = int(message.text)
-    await state.update_data(employes=int(employes))
-    await state.set_state(StateSelection.DA_state)
-    counter.append(employes)
-    await message.answer(
-        text='Мы можем подгрузить растровые и векторные карты в ваш аккаунт, введите их количество, если такой необходимости нет введите 0')
-    await state.set_state(StateSelection.maps)
-
-
-@dp.message(StateSelection.maps)
-async def mapss(message: Message, state: FSMContext):
-    maps = int(message.text)
-    counter.append(maps)
-    await state.update_data(maps=maps)
-    await message.answer(text='Нажмите кнопку', reply_markup=keybords.start_count())
-    await state.set_state(StateSelection.count)
-
-
-def counting(dogovor, sotrudniki, karty):
-    # Внедрение
-    vnedrenie = dogovor * 15000 + sotrudniki * 5000 + karty * 30000
-    return vnedrenie
-
-
-@dp.callback_query(StateSelection.count and F.data == "start_count")
-async def ending(callback: types.CallbackQuery):
-    dogovor = counter[0]
-    sotrudniki = counter[1]
-    karty = counter[2]
-    counting(dogovor, sotrudniki, karty)
-    if dogovor <= 3 and sotrudniki <= 10:
-        await callback.message.answer(
-            '<b>Тариф:</b>Проф\n\n<b>Стоимость лицензии: </b>70000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
-    elif sotrudniki > 20:
-        await callback.message.answer(
-            '<b>Тариф:</b>Копоративный\n\n<b>Стоимость лицензии: </b> хз руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
-    else:
-        await callback.message.answer(
-            '<b>Тариф:</b>Проф+\n\n<b>Стоимость лицензии: </b>100000руб/год\n\n<b>Стоимость внедрения:</b>' + str(
-                counting(dogovor, sotrudniki, karty)), ' руб', parse_mode='html')
-    counter.clear()
-
 
 @dp.message(F.text)
 async def no_section(message: Message):

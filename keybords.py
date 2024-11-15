@@ -9,7 +9,6 @@ def main_keybord() -> ReplyKeyboardMarkup:
     kb.button(text="Мобильное приложения📱")
     kb.button(text="Web-приложение 🖥"),
     kb.button(text="Модуль 1c")
-    kb.button(text="Калькулятор")
     kb.adjust(2, 2)
     return kb.as_markup(resize_keyboard=True)
 

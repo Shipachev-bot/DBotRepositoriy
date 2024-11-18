@@ -119,6 +119,22 @@ async def create_delyana_gpx(message: Message):
         parse_mode="html")
 
 
+@dp.message(F.text.lower() == "приложение к отчету")
+async def app_report(message: Message):
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAILpWc7SUHh2pgItWDIG5QyLQTriCb0AAKE5zEb_FXYSfDHv6CAv2BxAQADAgADeQADNgQ',
+        caption='<b>Приложение к отчету ИЛ-1 / ВЛ-1</b>\n\nВ web-приложении Delyana можно создавать приложения к отчётам по использованию и восстановлению лесов. Выберите необходимую лесосеку на карте, перейдите в информационную панель и нажмите на кнопку «Приложение к отчету ИЛ-1/ВЛ-1» (рис.78).',
+        parse_mode="html")
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAILp2c7Sbs6DutaLCh0JFL8MxOht9pIAAKG5zEb_FXYSUDkz-nmc5vnAQADAgADeQADNgQ',
+        caption='После нажатия на кнопку на карте появится красная область, вам необходимо кликнуть по ней. В появившемся всплывающем окне нажмите на «Создать отчет»',
+        parse_mode="html")
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAILqWc7SlR-AndQG7MCEBxBvEI0Isi-AAKP5zEb_FXYSagDZuUhC3mmAQADAgADeQADNgQ',
+        caption='Далее вам откроется окно с настройками. Отредактируйте поля если это необходимо и выберите вариант отчета.',
+        parse_mode="html")
+
+
 @dp.message(F.text.lower() == "создать деляну по gpx")
 async def create_delyana_gpx(message: Message):
     await message.answer_photo(

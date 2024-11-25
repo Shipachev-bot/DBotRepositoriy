@@ -23,6 +23,8 @@ dp = Dispatcher()
 
 # Хэндлер на команду /start
 
+phones = ['9130395590']
+
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     await message.answer(
@@ -51,9 +53,6 @@ async def answer_no(message: Message, state: FSMContext):
     elif data == StateSelection.create_infro or data == StateSelection.ls_state:
         await message.answer('Выберите интересующий раздел', reply_markup=keybords.web_first_keybord())
         await state.set_state(StateSelection.sectionSelection)
-    elif data == StateSelection.DA_state or data == StateSelection.ls_state or data == StateSelection.employes or data == StateSelection.count or data == StateSelection.maps:
-        await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
-        await state.set_state(StateSelection.moduleSelection)
     else:
         await message.answer("Что-то пошло не так")
 
@@ -153,18 +152,15 @@ async def send_album(message: Message):
         'AgACAgIAAxkBAAIB02cbEzsHEvEX71fkEe3TMlxvFc6PAAJg4TEbwL7YSNccVJ7WDR9uAQADAgADeQADNgQ',
         'AgACAgIAAxkBAAIB0mcbEzvVFMKvx1qs-ZPtvXGwPoZqAAJf4TEbwL7YSB7l3TpvSZLbAQADAgADeAADNgQ']
     media = [types.InputMediaPhoto(media=file_id) for file_id in file_ids]
-    await message.answer_media_group(media=media)
+    await message.answer_media_group(media=media, message_effect_id = 'тестовый текст')
+
+
 
 
 @dp.message(F.text.lower() == "cоздание инфраструктуры", StateSelection.sectionSelection)
 async def cmd_random(message: types.Message, state: FSMContext):
-    await message.answer_photo(
-        photo='AgACAgIAAxkBAAMRZx-OnS_uBxFsH0gdGfxwZxaOEg0AAnjmMRuxo-FIn71JGxWvdKgBAAMCAAN5AAM2BA',
-        caption='<b>Справочник про делянам</b>', reply_markup=keybords.inline_infro_delyana(), parse_mode="html")
-    # await message.answer_photo(
-    #  photo='AgACAgIAAxkBAAMTZx-OwCBgr3mzVKylo3_X_3gOTMYAAoHmMRuxo-FIDZdMbTMwJ78BAAMCAAN5AAM2BA',
-    #   caption='<b>Справочник по дорогам и складам</b>', reply_markup=keybords.inline_infro_roads_and_sklads(),
-    # parse_mode='html')
+    await message.answer("Отлично! Воспользуйтесь кнопками на клавиатуре",reply_markup=keybords.keybord_infro_delyana())
+    await state.set_state(StateSelection.create_infro)
 
 
 @dp.message(F.text.lower() == "оцифровка планшетов")
@@ -251,7 +247,7 @@ async def send_random_value(callback: types.CallbackQuery, state: FSMContext):
 
 @dp.message(F.text.lower() == "другое")
 async def another(message: Message):
-    await message.answer('НУ другое так другое')
+    await message.answer('Здесь тоже ничего нет, но совсем скоро появится')
 
 
 @dp.message(F.text, StateSelection.sectionSelection)

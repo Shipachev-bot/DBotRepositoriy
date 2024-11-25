@@ -96,22 +96,6 @@ def inline_infro_delyana():
     return builder.as_markup()
 
 
-def inline_infro_roads_and_sklads():
-    builder = InlineKeyboardBuilder()
-    builder.button(text='Смотреть', callback_data='roads_and_sklads')
-
-    builder.adjust()
-    return builder.as_markup()
 
 
-def start_brif():
-    builder = InlineKeyboardBuilder()
-    builder.button(text='Начать', callback_data='start_brif')
-    builder.adjust()
-    return builder.as_markup()
 
-def start_count():
-    builder = InlineKeyboardBuilder()
-    builder.button(text='Посчитать', callback_data='start_count')
-    builder.adjust()
-    return builder.as_markup()

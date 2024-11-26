@@ -42,9 +42,9 @@ def keybord_infro_delyana() -> ReplyKeyboardMarkup:
 def mobile_app_first_keybord() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
     kb.button(text="Запись трека")
-    kb.button(text="Фотозамер штабелей"),
+    kb.button(text="Создать фотоштабель"),
     kb.button(text="Карты/спутники")
-    kb.button(text="Загрузка карт для использования оффлайн")
+    kb.button(text="Загрузка оффлайн карт")
     kb.button(text="Назад 🔙")
     kb.button(text="Другое")
 

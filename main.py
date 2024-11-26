@@ -20,10 +20,10 @@ bot = Bot(token="8158336790:AAFk4Mo-_zMut4Wx08aLc97i2n-OfmFpt4s")
 # Диспетчер
 dp = Dispatcher()
 
-
 # Хэндлер на команду /start
 
 phones = ['9130395590']
+
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
@@ -32,11 +32,33 @@ async def cmd_start(message: types.Message, state: FSMContext):
         reply_markup=keybords.main_keybord())
     await state.set_state(StateSelection.moduleSelection)
 
-@dp.message(F.text.lower() == "мобильное приложения📱")
-async def answer_no(message: Message):
-    # await message.answer('Выберите интересующий раздел', reply_markup=keybords.mobile_app_first_keybord())
-    await message.answer('Этот блок в процесе разработки, поторопите Илью и тут появятся подсказки')
 
+@dp.message(F.text.lower() == "мобильное приложения📱")
+async def answer_no(message: Message, state: FSMContext):
+    await message.answer('Выберите интересующий раздел', reply_markup=keybords.mobile_app_first_keybord())
+    await state.set_state(StateSelection.mobile_app_state)
+
+@dp.message(F.text.lower() == "загрузка оффлайн карт", StateSelection.mobile_app_state)
+async def offline_maps(message: types.Message, state: FSMContext):
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAINcGdF2puIIXOBcr_yGiPdnK3-Zdw8AAKX6DEbhOYwSkTpNdOZqsANAQADAgADeQADNgQ',
+        caption='<b>Чтобы использовать карты без интернета - нужно их сохранить в разделе офлайн карты</b>Нажмите картинку (+) справа от заголовка и вам откроется экран создания области \nДобавьте две точки на карту так, чтобы попадала в красный прямоугольник интересующая вас область.',
+        parse_mode="html")
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAINcmdF2t_dGU6E_CxTgV9BmCJKt1qXAAKZ6DEbhOYwSlycucBJjmGPAQADAgADeQADNgQ',
+        caption='<b>Выберите слой для загрузки и нажмите «Загрузить» </b>\n',
+        parse_mode="html")
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAINdGdF3GDpESs8UlT7ubRp7OSeDhk9AAKo6DEbhOYwSoBuSfnAKNhuAQADAgADeAADNgQ',
+        caption='<b>Когда область будет загружена, то появится в списке офлайн областей</b>\n',
+        parse_mode="html")
+
+@dp.message(F.text.lower() == "карты/спутники", StateSelection.mobile_app_state)
+async def maps_setlite(message: types.Message, state: FSMContext):
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAINdmdF3PjTlREbGHUUZItAEsgaq_B-AAKr6DEbhOYwSl91s1kGup0vAQADAgADeQADNgQ',
+        caption='<b>Переключение между стилями карт</b>Обычная - содержит наименования населённых пунктов, рек и т.д.\nСпутник - спутниковые снимки с максимальной детализацией, но сделанные в разные временные промежутки (от года и старше).\nSentinel	-	актуальные	снимки,	могут	содержать	фотоснимки двухдневной давности или старше,  или без облаков.\n\nКарта содержит различные встроенные слои:\nКвартальная сеть России. Содержит номера и выделенные области.\nСлой рельефа. Показывает горы, впадины, равнины и т.д. Для включения режима нужно провести двумя пальцами по экрану снизу вверх (отключение - сверху вниз).',
+        parse_mode="html")
 
 @dp.message(F.text.lower() == "модуль 1c")
 async def answer_no(message: Message):
@@ -47,7 +69,7 @@ async def answer_no(message: Message):
 @dp.message(F.text.lower() == "назад 🔙")
 async def answer_no(message: Message, state: FSMContext):
     data = await state.get_state()
-    if data == StateSelection.sectionSelection:
+    if data == StateSelection.sectionSelection or data == StateSelection.mobile_app_state:
         await message.answer('Окей, промахнулись с модулем, хе-хе!', reply_markup=keybords.main_keybord())
         await state.set_state(StateSelection.moduleSelection)
     elif data == StateSelection.create_infro or data == StateSelection.ls_state:
@@ -152,14 +174,13 @@ async def send_album(message: Message):
         'AgACAgIAAxkBAAIB02cbEzsHEvEX71fkEe3TMlxvFc6PAAJg4TEbwL7YSNccVJ7WDR9uAQADAgADeQADNgQ',
         'AgACAgIAAxkBAAIB0mcbEzvVFMKvx1qs-ZPtvXGwPoZqAAJf4TEbwL7YSB7l3TpvSZLbAQADAgADeAADNgQ']
     media = [types.InputMediaPhoto(media=file_id) for file_id in file_ids]
-    await message.answer_media_group(media=media, message_effect_id = 'тестовый текст')
-
-
+    await message.answer_media_group(media=media, message_effect_id='тестовый текст')
 
 
 @dp.message(F.text.lower() == "cоздание инфраструктуры", StateSelection.sectionSelection)
 async def cmd_random(message: types.Message, state: FSMContext):
-    await message.answer("Отлично! Воспользуйтесь кнопками на клавиатуре",reply_markup=keybords.keybord_infro_delyana())
+    await message.answer("Отлично! Воспользуйтесь кнопками на клавиатуре",
+                         reply_markup=keybords.keybord_infro_delyana())
     await state.set_state(StateSelection.create_infro)
 
 
@@ -265,6 +286,7 @@ async def no_section(message: Message, state: FSMContext):
 async def photo(message: Message):
     photo_data = message.photo[-1]
     await message.answer(f'{photo_data}')
+
 
 @dp.message(F.text)
 async def no_section(message: Message):

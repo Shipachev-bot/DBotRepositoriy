@@ -38,6 +38,7 @@ async def answer_no(message: Message, state: FSMContext):
     await message.answer('Выберите интересующий раздел', reply_markup=keybords.mobile_app_first_keybord())
     await state.set_state(StateSelection.mobile_app_state)
 
+
 @dp.message(F.text.lower() == "загрузка оффлайн карт", StateSelection.mobile_app_state)
 async def offline_maps(message: types.Message, state: FSMContext):
     await message.answer_photo(
@@ -53,12 +54,21 @@ async def offline_maps(message: types.Message, state: FSMContext):
         caption='Когда область будет загружена она появится в списке оффлайн областей\n',
         parse_mode="html")
 
+
 @dp.message(F.text.lower() == "карты/спутники", StateSelection.mobile_app_state)
 async def maps_setlite(message: types.Message, state: FSMContext):
     await message.answer_photo(
         photo='AgACAgIAAxkBAAINdmdF3PjTlREbGHUUZItAEsgaq_B-AAKr6DEbhOYwSl91s1kGup0vAQADAgADeQADNgQ',
         caption='<b>Переключение между стилями карт</b>\nОбычная - содержит наименования населённых пунктов, рек и т.д.\nСпутник - спутниковые снимки с максимальной детализацией, но сделанные в разные временные промежутки (от года и старше).\nSentinel	-	актуальные	снимки,	могут	содержать	фотоснимки двухдневной давности или старше,  или без облаков.\n\nКарта содержит различные встроенные слои:\nКвартальная сеть России. Содержит номера и выделенные области.\nСлой рельефа. Показывает горы, впадины, равнины и т.д. Для включения режима нужно провести двумя пальцами по экрану снизу вверх (отключение - сверху вниз).',
         parse_mode="html")
+
+
+@dp.message(F.text.lower() == "запись трека", StateSelection.mobile_app_state)
+async def treck_recording(message: Message, state: FSMContext):
+    await message.answer_photo(
+        photo='AgACAgIAAxkBAAOTZxm5zlbv2DjbsimKj_HCxAOUTvIAAs7oMRsDGchIFHfbqZ2pqKsBAAMCAAN4AAM2BA',
+        caption="Записать трек очень просто!\nНажмите «Начать запись», чтобы запустить сохранение точек передвижения.\nВо время движения будет отображаться линия перемещений\nЧтобы завершить маршрут нажмите «Завершить».")
+
 
 @dp.message(F.text.lower() == "модуль 1c")
 async def answer_no(message: Message):
@@ -89,17 +99,6 @@ async def LS(message: Message, state: FSMContext):
     await state.set_state(StateSelection.ls_state)
 
 
-@dp.message(F.text.lower() == "карты/спутники")
-async def answer_no(message: Message):
-    await message.answer('Тест пройден', reply_markup=keybords.main_keybord())
-
-
-@dp.message(F.text.lower() == "запись трека")
-async def answer_no(message: Message):
-    await message.answer_photo(
-        photo='AgACAgIAAxkBAAOTZxm5zlbv2DjbsimKj_HCxAOUTvIAAs7oMRsDGchIFHfbqZ2pqKsBAAMCAAN4AAM2BA',
-        caption="Записать трек очень просто!\nНажмите «Начать запись», чтобы запустить сохранение точек передвижения.\nВо время движения будет отображаться линия перемещений\nЧтобы завершить маршрут нажмите «Завершить».",
-        reply_markup=keybords.treckRecording_keybord())
 
 
 @dp.message(F.text.lower() == "спасибо! проблема решена!")
